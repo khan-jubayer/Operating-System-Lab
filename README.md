@@ -27,4 +27,4 @@ The repository includes implementations of various operating system concepts, su
 
 ## How to Use
 1. Clone the repository:
-   git clone https://github.com/your-username/Operating-System-Lab.git
+   git clone https://github.com/khan-jubayer/Operating-System-Lab.git
