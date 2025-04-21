@@ -1,0 +1,69 @@
+### **Q1**
+"""
+
+processes = [
+    {"name": "P1", "arrival": 2, "burst": 4},
+    {"name": "P2", "arrival": 10, "burst": 1},
+    {"name": "P3", "arrival": 3, "burst": 2},
+    {"name": "P4", "arrival": 2, "burst": 5},
+    {"name": "P5", "arrival": 0, "burst": 5},
+]
+
+
+processes.sort(key=lambda x: (x["arrival"], x["burst"]))
+
+time = 0
+completed = []
+execution_order = []
+
+while processes:
+
+    ready_queue = [p for p in processes if p["arrival"] <= time]
+
+    if not ready_queue:
+        time += 1
+        continue
+    shortest = min(ready_queue, key=lambda x: x["burst"])
+    shortest["start"] = time
+    shortest["completion"] = time + shortest["burst"]
+    shortest["turnaround"] = shortest["completion"] - shortest["arrival"]
+    shortest["waiting"] = shortest["turnaround"] - shortest["burst"]
+
+
+    time += shortest["burst"]
+    execution_order.append(shortest["name"])
+    completed.append(shortest)
+    processes.remove(shortest)
+
+
+print("\nExecution Order: ", " → ".join(execution_order))
+print("\n{:<8} {:<8} {:<8} {:<8} {:<12} {:<12} {:<12}".format(
+    "Process", "Arrival", "Burst", "Start", "Completion", "Turnaround", "Waiting"
+))
+for p in completed:
+    print("{:<8} {:<8} {:<8} {:<8} {:<12} {:<12} {:<12}".format(
+        p["name"], p["arrival"], p["burst"], p["start"],
+        p["completion"], p["turnaround"], p["waiting"]
+    ))
+
+"""### **Q2**"""
+
+requests = [137, 240, 179, 75, 118, 29, 15, 51]
+head = 55
+seek_sequence = []
+total_seek = 0
+
+print("Step-by-step SSTF Execution:\n")
+step = 1
+while requests:
+
+    next_request = min(requests, key=lambda x: abs(head - x))
+    seek = abs(head - next_request)
+    total_seek += seek
+    print(f"Step {step}: {head} to {next_request} → Seek = {seek}")
+    seek_sequence.append((head, next_request, seek))
+    head = next_request
+    requests.remove(next_request)
+    step += 1
+
+print(f"\nTotal Seek Operations = {total_seek}")
